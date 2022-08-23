@@ -4,11 +4,10 @@
 #include <conio.h>
 using namespace std;
 
-
 struct calculator
 {
-    const long int speedOfLight = 299792458;
-    long long int speed;
+    const float speedOfLight = 299792;
+    long double speed;
     long double distance;
     long double result;
     long double time;
@@ -83,21 +82,26 @@ void do_calc(int opt, stringstream &ss, calculator &cal)
             ss >> cal.time;
             break;
     }
-}
+}   
 
-void show_result(const calculator &cal)
+void show_result(calculator &cal)
 {
+    cal.speed /= 0.27777778;
+    cal.speed *= 1000;
+    float oneHour = (cal.distance / cal.speed) / 1000;
     switch(cal.chosenValue)
     {
         case 5:
             move(20, 12);
-            cout << "Tempo em minutos, segundos e milisegundos:";
+            cout << "Tempo em horas, minutos, segundos e milisegundos:";
             move(20, 14);
-            cout << (cal.distance / cal.speed) / 60 << " min";
+            cout << oneHour << " hr";
             move(20, 15);
-            cout << (cal.distance / cal.speed) << " s";
+            cout << oneHour * 60 << " min";
             move(20, 16);
-            cout << (cal.distance / cal.speed) * 1000 << " ms";
+            cout << oneHour * 3600 << " s";
+            move(20, 17);
+            cout << oneHour * 3600000 << " ms";
             break;
         case 4:
             move(20, 10);
@@ -120,13 +124,14 @@ void evaluate_choice(calculator &cal)
             break;
         }
         char choice;
-        choice = getche();
+        choice = getch();
         string num;
         stringstream ss;
     
         if(isdigit(choice)){
             cal.twoChosen++;
             cal.chosenValue += opt;
+            cout << choice;
             ss << choice;
             cin >> num;
             ss << num;
@@ -135,7 +140,6 @@ void evaluate_choice(calculator &cal)
             move_cursor(opt);
         }
         else{
-            cout << "\b \b";
             cursor_check(choice, opt, cal);
         }
     }
@@ -154,6 +158,7 @@ void clear_screen(char fill = ' ') {
 
 int main()
 {
+    SetConsoleTitleA("Calculadora de Tempo, Distância ou Velocidade.");
     calculator cal;
     move(0, 15);
     cout << "\nTerra - Lua:\n384 mil km;\n\nTerra - Sol:\n150 mi de km;\n\nTerra - Plutão:\n7.9 bi de km;"
@@ -163,7 +168,7 @@ int main()
     move(37, 1);
     cout << "Aperte 'r' para definir a velocidade da luz!";
     move(20, 6);
-    cout << "Velocidade: (em m/s)";
+    cout << "Velocidade: (em km/h)";
     move(20, 9);
     cout << "Distância: (em km)";
     move(20, 12);
